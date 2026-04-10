@@ -3,7 +3,7 @@ import { test, expect} from '@playwright/test';
 test.describe('Login Flow', () => {
 
     test.beforeEach(async ({ page }) => {
-        await page.goto('https://dev-app.plax.ng/login');
+        await page.goto('/login');
         await page.getByRole('button', { name: 'Forgot your password?' }).click();
     });
 

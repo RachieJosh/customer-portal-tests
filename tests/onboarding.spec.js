@@ -4,7 +4,7 @@ import { type } from 'os';
 test.describe('Onboarding flow', () => {
     
     test.beforeEach(async ({ page }) => {
-        await page.goto('https://dev-app.plax.ng/login');
+        await page.goto('/login');
         await page.getByRole('button', { name: 'Create Account' }).click();
     });
 

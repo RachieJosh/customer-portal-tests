@@ -4,7 +4,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Login Flow', () => {
 
     test.beforeEach(async ({ page }) => {
-        await page.goto('https://dev-app.plax.ng/login');
+        await page.goto('/login');
     });
     test('TC_LG_001 - Successful login with valid credentials', async ({ page }) => {
         await page.fill('input[placeholder="m@example.com"]', 'jogiha1444@netoiu.com');
