@@ -22,7 +22,8 @@ test.describe('Onboarding flow', () => {
         await page.locator('#teamSize').fill('10');
         await page.fill('input[placeholder="Confirm Password"]', 'Jogeddie@26');
         await page.click('button:has-text("Create Account")');
-        await expect(page).toHaveURL('https://dev-app.plax.ng/login', { timeout: 50000 });
+        await expect(page.locator('text=Account created successfully! Redirecting to login...')).toBeVisible({ timeout: 50000 });
+        await expect(page.locator('text=Welcome Back')).toBeVisible({ timeout: 50000 });
     });
 
     test('TC_OB_002 - Successful account creation without Organization Name', async ({ page }) => {
@@ -39,7 +40,8 @@ test.describe('Onboarding flow', () => {
         await page.locator('#teamSize').fill('10');
         await page.fill('input[placeholder="Confirm Password"]', 'Jogeddie@26');
         await page.click('button:has-text("Create Account")');
-        await expect(page).toHaveURL('https://dev-app.plax.ng/login', { timeout: 50000 });
+        await expect(page.locator('text=Account created successfully! Redirecting to login...')).toBeVisible({ timeout: 50000 });
+        await expect(page.locator('text=Welcome Back')).toBeVisible({ timeout: 50000 });
     });
 
     test('TC_OB_003 - Organization Name accepts valid input', async ({ page }) => {
@@ -56,7 +58,8 @@ test.describe('Onboarding flow', () => {
         await page.locator('#teamSize').fill('10');
         await page.fill('input[placeholder="Confirm Password"]', 'Jogeddie@26');
         await page.click('button:has-text("Create Account")');
-        await expect(page).toHaveURL('https://dev-app.plax.ng/login', { timeout: 50000 });
+        await expect(page.locator('text=Account created successfully! Redirecting to login...')).toBeVisible({ timeout: 50000 });
+        await expect(page.locator('text=Welcome Back')).toBeVisible({ timeout: 50000 });
     });
 
     /** test('TC_OB_004 - Submit form with all fields empty', async ({ page }) => {
