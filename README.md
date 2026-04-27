@@ -19,13 +19,13 @@ This repository contains end-to-end automated tests for the Plax V3 Customer Por
 ## Folder Structure
 
 tests/
-├── login.spec.js
-├── onboarding.spec.js
-├── forgot-password.spec.js
-└── aggregator.spec.js
+- login.spec.js
+- onboarding.spec.js
+- forgot-password.spec.js
+- aggregator.spec.js
 
 pages/
-└── AggregatorPage.js
+- AggregatorPage.js
 
 ## Prerequisites
 - Node.js v18+
