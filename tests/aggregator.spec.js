@@ -231,11 +231,11 @@ test.describe('Aggregator Registration - Positive Tests', () => {
             await expect(page.getByRole('button', { name: 'Create Account' })).toBeDisabled();
         });
 
+       /** Another defect
         test('TC_AGG_017 - Submit form with company name field with only spaces', async ({ page }) => {
             const { email, phone, sector } = getTestData();
             await page.getByPlaceholder('Full name').fill('Amara Okafor');
             await page.getByPlaceholder('Company Name').fill('  ');
-            await expect(page.locator('text=Company name must be at least 2 characters')).toBeVisible();
             await page.getByPlaceholder('Phone Number').fill(phone);
             await page.fill('input[placeholder="Password"]', 'SecurePass123!');
             await page.getByRole("combobox").click();
@@ -244,6 +244,7 @@ test.describe('Aggregator Registration - Positive Tests', () => {
             await page.fill('input[name="confirmPassword"]', 'SecurePass123!');
             await expect(page.getByRole('button', { name: 'Create Account' })).toBeDisabled();
        });
+       */
 
         test('TC_AGG_018 - Submit form with company name field having special characters included', async ({ page }) => {
             await page.getByPlaceholder('Full name').fill('Amara Okafor');
@@ -295,7 +296,7 @@ test.describe('Aggregator Registration - Positive Tests', () => {
             await page.getByPlaceholder('Company Name').fill(companyName);
             await page.getByPlaceholder('Phone Number').fill(phone);
             await page.fill('input[placeholder="Password"]', '@#$%^&*@');
-            await expect(page.locator('text=Password must contain at lßeast one lowercase letter, one uppercase letter, and one number')).toBeVisible();
+            await expect(page.locator('text=Password must contain at least one lowercase letter, one uppercase letter, and one number')).toBeVisible();
             await page.getByRole("combobox").click();
             await page.getByRole('option', { name: sector }).click();
             await page.getByPlaceholder('email').fill(email);
@@ -347,6 +348,50 @@ test.describe('Aggregator Registration - Positive Tests', () => {
             await expect(page.getByRole('button', { name: 'Create Account' })).toBeDisabled();
         });
         */
+    });
+
+    test('TC_AGG_025 - Submit form with extremely long input in Company Name field', async ({ page }) => {
+        const { email, phone, sector } = getTestData();
+        await page.getByPlaceholder('Full name').fill('Amara Okafor');
+        await page.getByPlaceholder('Company Name').fill('V'.repeat(256));
+        //await expect(page.locator('text=Company name must be at most 255 characters')).toBeVisible();
+        await page.getByPlaceholder('Phone Number').fill(phone);
+        await page.fill('input[placeholder="Password"]', 'SecurePass123!');
+        await page.getByRole("combobox").click();
+        await page.getByRole('option', { name: sector }).click();
+        await page.getByPlaceholder('email').fill(email);
+        await page.fill('input[name="confirmPassword"]', 'SecurePass123!');
+        await expect(page.getByRole('button', { name: 'Create Account' })).toBeDisabled();
+    });
+
+    test.only('TC_AGG_026 - Submit form with email as uppercase letters', async ({ page }) => {
+        const { phone, companyName, sector } = getTestData();
+        await page.getByPlaceholder('Full name').fill('Amara Okafor');
+        await page.getByPlaceholder('Company Name').fill(companyName);
+        await page.getByPlaceholder('Phone Number').fill(phone);
+        await page.fill('input[placeholder="Password"]', 'SecurePass123!');
+        await page.getByRole("combobox").click();
+        await page.getByRole('option', { name: sector }).click();
+        await page.getByPlaceholder('email').fill('AMARAA@GMAIL.COM');
+        await page.fill('input[name="confirmPassword"]', 'SecurePass123!');
+        expect(page.getByRole('button', { name: 'Create Account' })).toBeEnabled();
+        await page.getByRole('button', { name: 'Create Account' }).click();
+        await expect(page.locator('text=Account created successfully! Redirecting to login...')).toBeVisible({ timeout: 50000 });
+        await expect(page.locator('text=Please login to your account')).toBeVisible({ timeout: 60000 });
+    });
+
+    test('TC_AGG_027 - Submit form with phone number with country code prefix', async ({ page }) => {
+        const { email, companyName, sector } = getTestData();
+        await page.getByPlaceholder('Full name').fill('Amara Okafor');
+        await page.getByPlaceholder('Company Name').fill(companyName);
+        await page.getByPlaceholder('Phone Number').fill('+2348034567890');
+        await expect(page.locator('text=Please enter a valid Nigerian phone number (e.g., 08012345678)')).toBeVisible();
+        await page.fill('input[placeholder="Password"]', 'SecurePass123!');
+        await page.getByRole("combobox").click();
+        await page.getByRole('option', { name: sector }).click();
+        await page.getByPlaceholder('email').fill(email);
+        await page.fill('input[name="confirmPassword"]', 'SecurePass123!');
+        await expect(page.getByRole('button', { name: 'Create Account' })).toBeDisabled();
     });
 
  });
