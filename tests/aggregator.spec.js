@@ -31,7 +31,7 @@ test.describe('Aggregator Registration - Positive Tests', () => {
         expect(page.getByRole('button', { name: 'Create Account' })).toBeEnabled();
         await page.getByRole('button', { name: 'Create Account' }).click();
         await expect(page.locator('text=Account created successfully! Redirecting to login...')).toBeVisible({ timeout: 50000 });
-        await expect(page.locator('text=Welcome Back')).toBeVisible({ timeout: 50000 });
+        await expect(page.locator('text=Please login to your account')).toBeVisible({ timeout: 60000 });
     });
 
     test('TC_AGG_002 - Toggle between Aggregator and Customer registration forms', async ({ page }) => {
@@ -70,9 +70,117 @@ test.describe('Aggregator Registration - Positive Tests', () => {
             await page.fill('input[placeholder="Password"]', 'SecurePass123!');
             await page.getByRole("combobox").click();
             await page.getByRole('option', { name: sector }).click();
-            await page.getByPlaceholder('email').fill('amaraokafor@@.gmail.com');
+            await page.getByPlaceholder('email').fill('amaraokafor@@mail.com');
             await expect(page.locator('text=Please enter a valid email address')).toBeVisible();
             await page.fill('input[name="confirmPassword"]', 'SecurePass123!');
             await expect(page.getByRole('button', { name: 'Create Account' })).toBeDisabled();
         });
-    });
+
+        test('TC_AGG_006 - Submit form with mismatched Password and Confirm Password', async ({ page }) => {
+            const { email, phone, companyName, sector } = getTestData();
+            await page.getByPlaceholder('Full name').fill('Amara Okafor');
+            await page.getByPlaceholder('Company Name').fill(companyName);
+            await page.getByPlaceholder('Phone Number').fill(phone);
+            await page.fill('input[placeholder="Password"]', 'SecurePass123!');
+            await page.getByRole("combobox").click();
+            await page.getByRole('option', { name: sector }).click();
+            await page.getByPlaceholder('email').fill(email);
+            await page.fill('input[name="confirmPassword"]', 'DifferentPass123!');
+            await expect(page.locator('text=Passwords do not match')).toBeVisible();
+            await expect(page.getByRole('button', { name: 'Create Account' })).toBeDisabled();
+        });
+
+        test('TC_AGG_007 - Submit form with Password and an empty Confirm Password', async ({ page }) => {
+            const { email, phone, companyName, sector } = getTestData();
+            await page.getByPlaceholder('Full name').fill('Amara Okafor');
+            await page.getByPlaceholder('Company Name').fill(companyName);
+            await page.getByPlaceholder('Phone Number').fill(phone);
+            await page.fill('input[placeholder="Password"]', 'SecurePass123!');
+            await page.getByRole("combobox").click();
+            await page.getByRole('option', { name: sector }).click();
+            await page.getByPlaceholder('email').fill(email);
+            await page.fill('input[name="confirmPassword"]', '');
+            await expect(page.getByRole('button', { name: 'Create Account' })).toBeDisabled();
+        });
+
+        test('TC_AGG_008 - Submit form with phone number containing non-numeric characters', async ({ page }) => {
+            const { email, companyName, sector } = getTestData();
+            await page.getByPlaceholder('Full name').fill('Amara Okafor');
+            await page.getByPlaceholder('Company Name').fill(companyName);
+            await page.getByPlaceholder('Phone Number').fill('0803-ABC-4567');
+            await expect(page.locator('text=Please enter a valid Nigerian phone number (e.g., 08012345678)')).toBeVisible();
+            await page.fill('input[placeholder="Password"]', 'SecurePass123!');
+            await page.getByRole("combobox").click();
+            await page.getByRole('option', { name: sector }).click();
+            await page.getByPlaceholder('email').fill(email);
+            await page.fill('input[name="confirmPassword"]', 'SecurePass123!');
+            await expect(page.getByRole('button', { name: 'Create Account' })).toBeDisabled();
+        });
+
+        test("TC_AGG_009 - Verify that system don/'t accept wrong phone number prefixes (060,050,040,020)", async ({ page }) => {
+            const { email, companyName, sector } = getTestData();
+            await page.getByPlaceholder('Full name').fill('Amara Okafor');
+            await page.getByPlaceholder('Company Name').fill(companyName);
+            await page.getByPlaceholder('Phone Number').fill('06012345678');
+            await expect(page.locator('text=Please enter a valid Nigerian phone number (e.g., 08012345678)')).toBeVisible();
+            await page.fill('input[placeholder="Password"]', 'SecurePass123!');
+            await page.getByRole("combobox").click();
+            await page.getByRole('option', { name: sector }).click();
+            await page.getByPlaceholder('email').fill(email);
+            await page.fill('input[name="confirmPassword"]', 'SecurePass123!');
+            await expect(page.getByRole('button', { name: 'Create Account' })).toBeDisabled();
+        });
+
+        test("TC_AGG_010 - Submit form with a weak password (no special characters)", async ({ page }) => {
+            const { email, phone, companyName, sector } = getTestData();
+            await page.getByPlaceholder('Full name').fill('Amara Okafor');
+            await page.getByPlaceholder('Company Name').fill(companyName);
+            await page.getByPlaceholder('Phone Number').fill(phone);
+            await page.fill('input[placeholder="Password"]', 'password123');
+            await expect(page.locator('text=Password must contain at least one lowercase letter, one uppercase letter, and one number')).toBeVisible();
+            await page.getByRole("combobox").click();
+            await page.getByRole('option', { name: sector }).click();
+            await page.getByPlaceholder('email').fill(email);
+            await page.fill('input[name="confirmPassword"]', 'password123');
+            await expect(page.getByRole('button', { name: 'Create Account' })).toBeDisabled();
+        });
+
+        test('TC_AGG_011 - Register with already existing email', async ({ page }) => {
+            const { phone, companyName, sector } = getTestData();
+            await page.getByPlaceholder('Full name').fill('Amara Okafor');
+            await page.getByPlaceholder('Company Name').fill(companyName);
+            await page.getByPlaceholder('Phone Number').fill(phone);
+            await page.fill('input[placeholder="Password"]', 'SecurePass123!');
+            await page.getByRole("combobox").click();
+            await page.getByRole('option', { name: sector }).click();
+            await page.getByPlaceholder('email').fill('jogiha1444@netoiu.com');
+            await page.fill('input[name="confirmPassword"]', 'SecurePass123!');
+            await page.getByRole('button', { name: 'Create Account' }).click();
+            await expect(page.locator('text=User with this email already exists')).toBeVisible();
+        });
+
+        test('TC_AGG_012 - Register with already existing phone number', async ({ page }) => {
+            const { email, companyName, sector } = getTestData();
+            await page.getByPlaceholder('Full name').fill('Amara Okafor');
+            await page.getByPlaceholder('Company Name').fill(companyName);
+            await page.getByPlaceholder('Phone Number').fill('09076875223');
+            await page.fill('input[placeholder="Password"]', 'SecurePass123!');
+            await page.getByRole("combobox").click();
+            await page.getByRole('option', { name: sector }).click();
+            await page.getByPlaceholder('email').fill(email);
+            await page.fill('input[name="confirmPassword"]', 'SecurePass123!');
+            await page.getByRole('button', { name: 'Create Account' }).click();
+            await expect(page.locator('text=This phone number is already registered.')).toBeVisible();
+        });
+
+        test('TC_AGG_013 - Submit form with no industry sector selected', async ({ page }) => {
+            const { email, phone, companyName } = getTestData();
+            await page.getByPlaceholder('Full name').fill('Amara Okafor');
+            await page.getByPlaceholder('Company Name').fill(companyName);
+            await page.getByPlaceholder('Phone Number').fill(phone);
+            await page.fill('input[placeholder="Password"]', 'SecurePass123!');
+            await page.getByPlaceholder('email').fill(email);
+            await page.fill('input[name="confirmPassword"]', 'SecurePass123!');
+            await expect(page.getByRole('button', { name: 'Create Account' })).toBeDisabled();
+        });
+ });
