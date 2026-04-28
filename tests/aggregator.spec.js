@@ -184,6 +184,8 @@ test.describe('Aggregator Registration - Positive Tests', () => {
             await expect(page.getByRole('button', { name: 'Create Account' })).toBeDisabled();
         });
 
+        });
+
     test.describe('Aggregator Registration - Edge Case Tests', () => {
         test('TC_AGG_004 - Submit form with all fields empty', async ({ page }) => {
             await expect(page.getByRole('button', { name: 'Create Account' })).toBeDisabled();
@@ -348,7 +350,6 @@ test.describe('Aggregator Registration - Positive Tests', () => {
             await expect(page.getByRole('button', { name: 'Create Account' })).toBeDisabled();
         });
         */
-    });
 
     test('TC_AGG_025 - Submit form with extremely long input in Company Name field', async ({ page }) => {
         const { email, phone, sector } = getTestData();
@@ -364,7 +365,7 @@ test.describe('Aggregator Registration - Positive Tests', () => {
         await expect(page.getByRole('button', { name: 'Create Account' })).toBeDisabled();
     });
 
-    test.only('TC_AGG_026 - Submit form with email as uppercase letters', async ({ page }) => {
+    test('TC_AGG_026 - Submit form with email as uppercase letters', async ({ page }) => {
         const { phone, companyName, sector } = getTestData();
         await page.getByPlaceholder('Full name').fill('Amara Okafor');
         await page.getByPlaceholder('Company Name').fill(companyName);
@@ -372,7 +373,7 @@ test.describe('Aggregator Registration - Positive Tests', () => {
         await page.fill('input[placeholder="Password"]', 'SecurePass123!');
         await page.getByRole("combobox").click();
         await page.getByRole('option', { name: sector }).click();
-        await page.getByPlaceholder('email').fill('AMARAA@GMAIL.COM');
+        await page.getByPlaceholder('email').fill('AMARAAA@GMAIL.COM');
         await page.fill('input[name="confirmPassword"]', 'SecurePass123!');
         expect(page.getByRole('button', { name: 'Create Account' })).toBeEnabled();
         await page.getByRole('button', { name: 'Create Account' }).click();
@@ -393,5 +394,4 @@ test.describe('Aggregator Registration - Positive Tests', () => {
         await page.fill('input[name="confirmPassword"]', 'SecurePass123!');
         await expect(page.getByRole('button', { name: 'Create Account' })).toBeDisabled();
     });
-
- });
+});
