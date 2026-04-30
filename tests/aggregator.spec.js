@@ -373,7 +373,7 @@ test.describe('Aggregator Registration - Positive Tests', () => {
         await page.fill('input[placeholder="Password"]', 'SecurePass123!');
         await page.getByRole("combobox").click();
         await page.getByRole('option', { name: sector }).click();
-        await page.getByPlaceholder('email').fill('AMARAAA@GMAIL.COM');
+        await page.getByPlaceholder('email').fill('AMRA@GMAIL.COM');
         await page.fill('input[name="confirmPassword"]', 'SecurePass123!');
         expect(page.getByRole('button', { name: 'Create Account' })).toBeEnabled();
         await page.getByRole('button', { name: 'Create Account' }).click();
